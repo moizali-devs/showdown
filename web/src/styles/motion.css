@@ -1,0 +1,11 @@
+/* Shared motion language. Only transform and opacity animate (plus color/background on small controls). */
+:root{--ease:cubic-bezier(.2,.8,.2,1);--ease-calm:cubic-bezier(.2,.7,.2,1);--dur-fast:.2s;--dur:.28s;--dur-page:.35s}
+.page-enter{animation:pageEnter var(--dur-page) var(--ease-calm) both}
+@keyframes pageEnter{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.pill,.chip,.sd-run,.sd-seg button,.sd-txt{transition:opacity var(--dur-fast),background-color var(--dur-fast),color var(--dur-fast),border-color var(--dur-fast),transform var(--dur-fast) var(--ease)}
+.pill:hover:not([aria-disabled=true]):not(:disabled),.chip:hover{transform:translateY(-1px)}
+.pill:active:not([aria-disabled=true]):not(:disabled),.chip:active,.sd-run:active:not(:disabled),.sd-seg button:active:not(:disabled){transform:scale(.97)}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.001ms !important;animation-iteration-count:1 !important;transition-duration:.001ms !important;scroll-behavior:auto !important}
+  .pill:hover,.chip:hover,.pill:active,.chip:active,.sd-run:hover,.sd-run:active{transform:none !important}
+}

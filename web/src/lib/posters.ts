@@ -18,3 +18,9 @@ export function posterFor(title: string): string | null {
   const hit = POSTERS.find(([re]) => re.test(title));
   return hit ? `/posters/${hit[1]}.jpg` : null;
 }
+
+/** Pre-rendered greyscale poster (X-Ray view). Avoids a CSS filter, which is costly while scrolling. */
+export function grayPosterFor(title: string): string | null {
+  const hit = POSTERS.find(([re]) => re.test(title));
+  return hit ? `/posters/gray/${hit[1]}.jpg` : null;
+}

@@ -1,5 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
+import Nav from '../components/Nav';
+import { useXRay } from '../lib/xray';
 import type { Customer, CustomerState, Mode, SeatInfo, ShowdownState } from '../../../shared/types';
 import Hall3D from '../components/Hall3D';
 import type { HallPin, SeatVisual } from '../components/Hall3D';
@@ -43,7 +45,7 @@ export default function Showdown() {
   const [showId, setShowId] = useState<number | null>(showParam);
   const [state, setState] = useState<ShowdownState | null>(null);
   const [bg, setBg] = useState<Record<string, SeatVisual>>({});
-  const [xrayOpen, setXrayOpen] = useState(false);
+  const { on: xrayOn, setOn: setXRay } = useXRay();
   const [err, setErr] = useState<string | null>(null);
   const width = useWidth();
 
@@ -112,7 +114,7 @@ export default function Showdown() {
     { id: 'A', seat: SEAT, state: pinState(st.customers.A) },
     { id: 'B', seat: SEAT, state: pinState(st.customers.B) },
   ];
-  const showXray = busy || xrayOpen;
+  const showXray = busy || xrayOn;
   const ring = st.seatStatus === 'CONFLICT' ? { seat: SEAT, kind: 'pulse' as const }
     : st.seatStatus === 'HELD' ? { seat: SEAT, kind: 'held' as const } : null;
   const mobile = width <= 1100;
@@ -128,8 +130,9 @@ export default function Showdown() {
 
   return (
     <div className="sd">
+      <Nav />
       <div className="sd-pad">
-        <div className="sd-top sd-lbl"><span>Showdown{me ? ` · Window ${me}` : ''}</span><span>Seat {SEAT}</span></div>
+        <div className="sd-top sd-lbl"><Link to="/" className="sd-back" data-testid="back-to-cinema" onClick={() => setXRay(false)}><span aria-hidden="true">←</span>Back to the cinema</Link><span>Seat {SEAT}{me ? ` · Window ${me}` : ''}</span></div>
         <h1>Two clicks. One seat.</h1>
 
         <div className="sd-ctl">
@@ -149,7 +152,6 @@ export default function Showdown() {
             <button type="button" className="sd-run" disabled={busy || !showId} onClick={act(() => sdApi.run(showId!))}>Run</button>
           )}
           <button type="button" className="sd-txt" disabled={!showId} onClick={act(() => sdApi.reset(showId!))}>Reset</button>
-          <button type="button" className="sd-txt" aria-pressed={showXray} onClick={() => setXrayOpen((v) => !v)}>X-Ray</button>
         </div>
         {err ? <div role="alert" style={{ marginTop: 12, color: '#B83A3E', fontSize: 13 }}>{err}</div> : null}
 

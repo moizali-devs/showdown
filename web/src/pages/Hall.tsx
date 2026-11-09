@@ -4,6 +4,8 @@ import type { DbSeatStatus, SeatInfo, Showtime } from '@shared/types';
 import Hall3D from '../components/Hall3D';
 import type { SeatVisual } from '../components/Hall3D';
 import Label from '../components/Label';
+import Nav from '../components/Nav';
+import { useXRay } from '../lib/xray';
 import { api, ApiError, rs } from '../lib/api';
 import { useShowtimeSocket } from '../lib/ws';
 
@@ -24,7 +26,7 @@ export default function Hall() {
   const [busy, setBusy] = useState<'hold' | 'pay' | null>(null);
   const [done, setDone] = useState(false);
   const [note, setNote] = useState('');
-  const [xray, setXray] = useState(false);
+  const { on: xray } = useXRay();
   const [hover, setHover] = useState<string | null>(null);
   const [last, setLast] = useState('C7');
   const [sql, setSql] = useState<string[]>([]);
@@ -183,11 +185,12 @@ export default function Hall() {
   const sqlLines = shown.length ? shown : ['-- hold a seat to see its SQL'];
 
   if (loadErr && !showtime) {
-    return <div className="hall-wrap"><Link className="back" to="/films">← Films</Link><p role="alert" style={{ marginTop: 40, color: 'var(--muted)' }}>Could not load this showtime. {loadErr}</p></div>;
+    return <div className="page"><Nav /><div className="hall-wrap"><Link className="back" to="/films">← Films</Link><p role="alert" style={{ marginTop: 40, color: 'var(--muted)' }}>Could not load this showtime. {loadErr}</p></div></div>;
   }
 
   return (
     <div className="page">
+      <Nav />
       <div className="hall-wrap">
         <div className="hall-head">
           <Link className="back" to={showtime ? `/films/${showtime.movieId}` : '/films'}>← Films</Link>
@@ -205,8 +208,6 @@ export default function Hall() {
                 seats={visual} xray={xray} focus={focus} interactive onSeatClick={pick} onSeatHover={setHover}
                 ariaLabel="Choose a seat. Rows A to J, 14 seats per row, row J recliners."
               />
-              <button type="button" className="xray-pill" aria-pressed={xray} onClick={() => setXray(x => !x)}
-                style={{ border: '1px solid ' + (xray ? 'var(--ink)' : 'var(--line)'), background: xray ? 'var(--ink)' : 'transparent', color: xray ? '#fff' : 'var(--ink)' }}>X-Ray</button>
             </div>
             <div aria-live="polite" style={{ height: 22, marginTop: 8, fontSize: 13, letterSpacing: '.01em' }}>{info}</div>
             <div className="sqlb" style={{ opacity: xray ? 1 : 0, pointerEvents: xray ? 'auto' : 'none' }} aria-hidden={!xray}>

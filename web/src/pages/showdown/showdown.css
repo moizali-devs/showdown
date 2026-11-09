@@ -2,10 +2,13 @@
 .sd *{box-sizing:border-box}
 .sd button{font-family:inherit}
 .sd button:focus-visible{outline:2px solid #141414;outline-offset:3px}
-.sd-pad{max-width:1440px;margin:0 auto;padding:72px 80px 56px;display:flex;flex-direction:column;align-items:center}
+.sd-pad{max-width:1440px;margin:0 auto;padding:28px 80px 56px;display:flex;flex-direction:column;align-items:center}
 .sd-lbl{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#6B6862}
-.sd-top{width:100%;display:flex;justify-content:space-between}
-.sd h1{margin:64px 0 0;font-weight:300;font-size:clamp(44px,6.1vw,88px);line-height:.95;letter-spacing:-.04em;text-align:center}
+.sd-top{width:100%;display:flex;justify-content:space-between;align-items:center}
+.sd-top>span{display:inline-flex;align-items:center;min-height:44px}
+.sd-back{display:inline-flex;align-items:center;gap:8px;min-height:44px;transition:color .2s}
+.sd-back:hover{color:#141414}
+.sd h1{margin:40px 0 0;font-weight:300;font-size:clamp(44px,6.1vw,88px);line-height:.95;letter-spacing:-.04em;text-align:center}
 .sd-ctl{margin-top:36px;display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:16px 20px}
 .sd-seg{display:inline-flex;gap:2px;padding:4px;border:1px solid #D6D2CA;border-radius:999px}
 .sd-seg button{min-height:44px;padding:0 22px;border:0;border-radius:999px;font-size:14px;font-weight:500;cursor:pointer;background:transparent;color:#141414;transition:background-color .25s,color .25s}

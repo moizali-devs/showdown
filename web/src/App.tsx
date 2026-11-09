@@ -20,9 +20,11 @@ function ScrollTop() {
 }
 
 export default function App() {
+  const { pathname } = useLocation();
   return (
     <>
       <ScrollTop />
+      <div key={pathname} className="page-enter">
       <Suspense fallback={<div className="page" />}>
         <Routes>
           <Route path="/" element={<Home />} />
@@ -34,6 +36,7 @@ export default function App() {
           <Route path="*" element={<NotFound />} />
         </Routes>
       </Suspense>
+      </div>
     </>
   );
 }

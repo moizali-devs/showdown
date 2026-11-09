@@ -124,7 +124,7 @@ def bench(pw, browser_name: str, base: str, pages: list[str], viewports: list[tu
                 pg.goto(base + path, wait_until="networkidle")
                 pg.wait_for_timeout(2000)  # load-in stagger + fonts
                 if xray:
-                    pg.get_by_role("button", name="X-Ray").first.click()
+                    pg.locator('[data-testid="xray-switch"]').first.click()
                     pg.wait_for_timeout(800)
                 cdp = None
                 if browser_name == "chromium":

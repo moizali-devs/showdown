@@ -1,0 +1,47 @@
+/* Shared nav. No backdrop-filter, only transform/opacity animate. */
+.nav{border-bottom:1px solid var(--line);background:var(--ground);position:relative;z-index:20}
+.nav-inner{max-width:1280px;margin:0 auto;padding:0 24px;height:72px;display:flex;align-items:center;justify-content:space-between;gap:16px}
+.nav-logo{display:flex;align-items:baseline;gap:12px;min-width:0}
+.nav-name{font-weight:500;font-size:18px;letter-spacing:-.02em}
+.nav-sub{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);white-space:nowrap}
+.nav-right{display:flex;align-items:center;gap:28px}
+.nav-links{display:flex;align-items:center;gap:28px}
+.nav-links .navlink{font-size:13px;color:var(--muted);padding-bottom:2px;border-bottom:1px solid transparent}
+.nav-links .navlink.on{color:var(--ink);border-bottom-color:var(--ink)}
+.nav-links .navlink:nth-child(n+2){animation:navIn .35s var(--ease) both}
+.nav-book{height:40px;padding:0 20px}
+.nav-menu{all:unset;display:none;box-sizing:border-box;cursor:pointer;width:44px;height:44px;align-items:center;justify-content:center;color:var(--ink)}
+.nav-menu:focus-visible{outline:2px solid var(--ink)}
+.xsw{all:unset;box-sizing:border-box;cursor:pointer;display:inline-flex;align-items:center;gap:10px;height:40px;padding:0 8px 0 16px;border-radius:999px;font-size:12px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;border:1px solid #C5C0B6;color:var(--ink);transition:background-color .28s var(--ease),color .28s var(--ease),border-color .28s var(--ease)}
+.xsw:focus-visible{outline:2px solid var(--ink);outline-offset:3px}
+.xsw.on{background:#141414;border-color:#141414;color:#fff}
+.xsw-track{position:relative;display:inline-block;width:36px;height:22px;border-radius:999px;background:#D6D2CA;transition:background-color .28s var(--ease)}
+.xsw.on .xsw-track{background:#E5484D}
+.xsw-knob{position:absolute;top:3px;left:3px;width:16px;height:16px;border-radius:50%;background:#fff;box-shadow:0 1px 2px rgba(20,20,20,.25);transform:translateX(0);transition:transform .28s cubic-bezier(.2,.7,.2,1)}
+.xsw.on .xsw-knob{transform:translateX(14px)}
+.nav-panel{display:none}
+.nav-strip{background:#141414;color:#F6F5F2;animation:navIn .35s var(--ease) both}
+.nav-strip-in{max-width:1280px;margin:0 auto;padding:0 24px;min-height:36px;display:flex;align-items:center;justify-content:space-between;gap:16px;font-size:11px;letter-spacing:.12em;text-transform:uppercase}
+.nav-strip-in span{display:flex;align-items:center;gap:10px}
+.nav-strip-in i{width:6px;height:6px;border-radius:50%;background:#E5484D;flex:none}
+.nav-strip-in a{min-height:36px;display:inline-flex;align-items:center;white-space:nowrap}
+.nav-strip-in a:hover{text-decoration:underline;text-underline-offset:4px}
+@keyframes navIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+
+@media (max-width:760px){
+  .nav-inner{padding:0 16px}
+  .nav-sub,.nav-links,.nav-book{display:none}
+  .nav-right{gap:8px}
+  .nav-menu{display:inline-flex}
+  .nav-panel{display:block;position:absolute;left:0;right:0;top:100%;background:var(--ground);border-bottom:1px solid var(--line);opacity:0;transform:translateY(-6px);visibility:hidden;pointer-events:none;transition:opacity .25s var(--ease),transform .25s var(--ease),visibility 0s .25s}
+  .nav-panel.open{opacity:1;transform:none;visibility:visible;pointer-events:auto;transition:opacity .25s var(--ease),transform .25s var(--ease)}
+  .nav-panel-in{padding:8px 16px 24px;display:flex;flex-direction:column}
+  .nav-panel-in a{padding:14px 0;border-bottom:1px solid var(--line);font-size:22px;font-weight:300;letter-spacing:-.02em}
+  .nav-panel-book{margin-top:20px;height:48px;font-size:14px}
+  .nav-strip-in{padding:0 16px}
+}
+@media (max-width:380px){.xsw{padding:0 6px 0 12px;gap:8px}}
+@media (prefers-reduced-motion:reduce){.nav-links .navlink,.nav-strip{animation:none}.xsw,.xsw-track,.xsw-knob,.nav-panel{transition:none}}
+.nav-strip-back{all:unset;cursor:pointer;min-height:36px;display:inline-flex;align-items:center;white-space:nowrap;letter-spacing:inherit;text-transform:inherit;font-size:inherit;color:inherit}
+.nav-strip-back:hover{text-decoration:underline;text-underline-offset:4px}
+.nav-strip-back:focus-visible{outline:2px solid #F6F5F2;outline-offset:2px}
