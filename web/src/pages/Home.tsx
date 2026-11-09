@@ -69,8 +69,8 @@ export default function Home() {
           </button>
           <div style={{ marginTop: 20, opacity: xray ? 1 : 0, transform: `translateY(${xray ? 0 : 6}px)`, transition: 'opacity .5s ease,transform .5s ease', pointerEvents: 'none' }} aria-hidden={!xray}>
             <div className="mono" style={{ fontSize: 12, lineHeight: 1.7 }}>
-              <div>UPDATE seats SET status = 'held'</div>
-              <div>WHERE id = 'C7' AND status = 'free';</div>
+              <div>UPDATE show_seat SET status = 'BOOKED'</div>
+              <div>WHERE seat_id = 'C7' AND status = 'FREE';</div>
               <div style={{ color: 'var(--muted)' }}>-- A: 1 row &nbsp;·&nbsp; B: 0 rows</div>
             </div>
           </div>

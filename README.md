@@ -13,7 +13,8 @@ deadlock, or (with protection off) double-book it, live.
 ![Node.js](https://img.shields.io/badge/Node.js-141414?style=flat-square&logo=nodedotjs&logoColor=5FA04E)
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL_17-141414?style=flat-square&logo=postgresql&logoColor=4169E1)
 ![WebSockets](https://img.shields.io/badge/WebSockets-141414?style=flat-square)
-![Tests](https://img.shields.io/badge/tests-57_passing-1F8A5B?style=flat-square)
+[![CI](https://img.shields.io/github/actions/workflow/status/moizali-devs/showdown/ci.yml?branch=main&style=flat-square&label=tests)](https://github.com/moizali-devs/showdown/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/license-MIT-141414?style=flat-square)](LICENSE)
 
 ![Showdown home page: a matte 3D cinema hall with two customers reaching for seat C7](docs/media/hero.png)
 
