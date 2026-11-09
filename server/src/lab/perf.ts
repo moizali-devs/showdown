@@ -1,10 +1,12 @@
-import { readFileSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import type { PerfQuery, PerfResult } from '../../../shared/types';
 import type { Ctx } from '../engine/context';
 
-const DB_DIR = join(dirname(fileURLToPath(import.meta.url)), '..', '..', '..', 'db');
+// Source layout: server/src/lab -> ../../../db. Bundled (Vercel function): api/_app.mjs -> <cwd>/db (includeFiles).
+const DB_DIR = [join(dirname(fileURLToPath(import.meta.url)), '..', '..', '..', 'db'), join(process.cwd(), 'db')]
+  .find((d) => existsSync(join(d, 'perf_indexes.sql'))) ?? join(process.cwd(), 'db');
 const read = (...p: string[]) => readFileSync(join(DB_DIR, ...p), 'utf8');
 
 const QUERIES: { name: PerfQuery['name']; file: string }[] = [

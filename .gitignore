@@ -4,3 +4,7 @@ dist
 verification/
 *.log
 .env
+
+.vercel
+.env*.local
+api/_app.mjs

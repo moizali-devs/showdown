@@ -16,6 +16,8 @@ deadlock, or (with protection off) double-book it, live.
 [![CI](https://img.shields.io/github/actions/workflow/status/moizali-devs/showdown/ci.yml?branch=main&style=flat-square&label=tests)](https://github.com/moizali-devs/showdown/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-141414?style=flat-square)](LICENSE)
 
+**[Live demo → showdown-iota.vercel.app](https://showdown-iota.vercel.app)**
+
 ![Showdown home page: a matte 3D cinema hall with two customers reaching for seat C7](docs/media/hero.png)
 
 </div>
@@ -82,6 +84,10 @@ sales report from **~11 ms to ~4.6 ms** (Seq Scan → Index Only Scan).
 
 ## Choosing a seat
 
+Browse what's showing, pick a showtime, then pick seats on the hall.
+
+![Films page: a grid of the eight films now showing](docs/media/films.png)
+
 The hall is a matte 3D model built entirely with CSS 3D transforms (no WebGL): stepped rows, a curved screen,
 drag to orbit. Seats update in every open window in real time over WebSockets. Holding seats calls a PL/pgSQL
 `book_seats()` function that locks seats in a fixed order; paying uses a transaction with a `SAVEPOINT` per seat,
@@ -119,7 +125,7 @@ flowchart LR
 
 ## Run it
 
-Requires **Node.js 20+**. Nothing else.
+Requires **Node.js 22+**. Nothing else.
 
 ```bash
 npm install
@@ -135,6 +141,14 @@ npm run dev        # PostgreSQL + schema + seed + API + WebSocket + Vite → htt
 
 Try the race in two real windows: open `/showdown?show=<id>&customer=A` and `…&customer=B` side by side
 (the demo show id is at `/api/demo`). A full five-minute walkthrough is in [docs/VIVA.md](docs/VIVA.md).
+
+### The live demo
+
+The [live demo](https://showdown-iota.vercel.app) runs on Vercel (a Node function with WebSockets) against a
+[Neon](https://neon.tech) PostgreSQL database over a direct, unpooled connection, so locks and deadlocks are real
+there too. The server keeps each race's open transactions in memory, and serverless instances can be recycled
+or multiplied, so the one-page **Run** button is the most reliable way to try it online. For the click-by-click
+two-window race, run it locally. `vercel.json`, `api/index.ts` and `scripts/build-api.mjs` hold the deployment setup.
 
 ## Tested against the real database
 
@@ -187,8 +201,7 @@ docs/               demo script, build contract, README media
 ## Scope
 
 Payments are simulated (decline and fail-one-seat are switches), there is no login, and it runs locally.
-Crash recovery (WAL) is out of scope. Movie titles are real 2026 releases used as sample data; all artwork is
-original and no posters are used.
+Crash recovery (WAL) is out of scope. Movie titles are real 2026 releases used as sample data; posters are © their studios, used for a non-commercial demo (see web/public/posters/CREDITS.md).
 
 ## Team
 

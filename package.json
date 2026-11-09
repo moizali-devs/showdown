@@ -4,16 +4,19 @@
   "private": true,
   "description": "Showdown: Two People, One Seat - ADBMS concurrency control demo (React + Node + PostgreSQL)",
   "type": "module",
-  "engines": { "node": ">=20" },
+  "engines": {
+    "node": "22.x"
+  },
   "scripts": {
     "dev": "tsx server/src/main.ts",
     "reset-db": "tsx server/src/scripts/reset-db.ts",
     "test": "vitest run",
     "test:watch": "vitest",
     "typecheck": "tsc -p tsconfig.json --noEmit && tsc -p web/tsconfig.json --noEmit",
-    "build": "vite build --config web/vite.config.ts"
+    "build": "vite build --config web/vite.config.ts && node scripts/build-api.mjs"
   },
   "dependencies": {
+    "@vercel/functions": "^3.11.0",
     "embedded-postgres": "17.5.0-beta.15",
     "express": "^4.21.2",
     "pg": "^8.13.1",
@@ -30,6 +33,7 @@
     "@types/react-dom": "^18.3.1",
     "@types/ws": "^8.5.13",
     "@vitejs/plugin-react": "^4.3.4",
+    "esbuild": "^0.24.2",
     "tsx": "^4.19.2",
     "typescript": "^5.7.2",
     "vite": "^6.0.3",

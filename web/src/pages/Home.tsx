@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import Nav from '../components/Nav';
 import Footer from '../components/Footer';
 import Label from '../components/Label';
+import FilmArt from '../components/FilmArt';
 import Hall3D from '../components/Hall3D';
 import type { HallPin, SeatVisual } from '../components/Hall3D';
 import ModeMini from '../components/ModeMini';
@@ -100,9 +101,12 @@ export default function Home() {
             const today = first ? times.filter(t => dayKey(t.startsAt) === dayKey(first.startsAt)).slice(0, 3) : [];
             return (
               <div key={movie.id} className="film-row home-film">
-                <div style={{ display: 'flex', alignItems: 'baseline', gap: 24, minWidth: 0, flex: '1 1 auto', flexWrap: 'wrap' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 20, minWidth: 0, flex: '1 1 auto' }}>
+                  <Link to={`/films/${movie.id}`} tabIndex={-1} aria-hidden="true" className="home-thumb"><FilmArt movie={movie} /></Link>
+                  <div style={{ display: 'flex', alignItems: 'baseline', gap: '4px 24px', minWidth: 0, flexWrap: 'wrap' }}>
                   <Link className="film-title" to={`/films/${movie.id}`} style={{ fontWeight: 300, fontSize: 'clamp(28px,3.2vw,40px)', letterSpacing: '-0.03em', lineHeight: 1.1 }}>{movie.title}</Link>
                   <span style={{ fontSize: 12, color: 'var(--muted)', whiteSpace: 'nowrap' }}>{movie.genre} · {movie.year}</span>
+                  </div>
                 </div>
                 <div style={{ display: 'flex', gap: 8, flex: '0 0 auto' }}>
                   {today.map(t => <Link key={t.id} className="chip" to={`/hall/${t.id}`}>{t.label}</Link>)}

@@ -69,7 +69,8 @@ export async function runDeadlock(ctx: Ctx, ordered: boolean): Promise<DeadlockR
   try {
     await Promise.all([A.connect(), B.connect()]);
     // fast detection for the demo (superuser may change it per session)
-    await Promise.all([A, B].map((s) => s.exec("SET deadlock_timeout = '200ms'", [], { quiet: true })));
+    // managed Postgres (Neon) may refuse this; the default 1s still detects the cycle
+    await Promise.all([A, B].map((s) => s.exec("SET deadlock_timeout = '200ms'", [], { quiet: true }).catch(() => undefined)));
     for (const s of [A, B]) { await s.exec('BEGIN'); s.inTx = true; }
     mark('A', 'BEGIN'); mark('B', 'BEGIN');
 

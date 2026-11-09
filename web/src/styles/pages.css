@@ -37,3 +37,7 @@
 @media (max-width:860px){.hall-wrap{padding:24px 24px 36px}}
 @media (max-width:460px){.hall-wrap{padding:20px 16px 32px}.hall-side{flex-basis:100%}}
 @media (prefers-reduced-motion:reduce){.sqlb{transition:none}}
+.home-thumb{flex:0 0 auto;width:44px;display:block;transition:transform .4s cubic-bezier(.2,.8,.2,1)}
+.home-film:hover .home-thumb{transform:translateY(-2px) scale(1.06)}
+@media (min-width:900px){.home-thumb{width:52px}}
+@media (prefers-reduced-motion:reduce){.home-thumb{transition:none}.home-film:hover .home-thumb{transform:none}}

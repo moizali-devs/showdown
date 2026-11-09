@@ -26,7 +26,7 @@ export interface Ctx {
 }
 
 export function createCtx(connectionString: string, dbKind: 'embedded' | 'external'): Ctx {
-  const pool = new pg.Pool({ connectionString, max: 20, application_name: 'showdown-admin' });
+  const pool = new pg.Pool({ connectionString, max: Number(process.env.PG_POOL_MAX) || 20, application_name: 'showdown-admin' });
   pool.on('error', () => { /* idle client errors: ignore */ });
   return { connectionString, dbKind, pool, bus: new Bus(), pids: new Map(), clients: new Set() };
 }

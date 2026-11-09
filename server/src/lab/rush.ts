@@ -11,7 +11,9 @@ const BOT_FIRST_CUSTOMER = 4; // seed: customers 4..53 = "Bot 01".."Bot 50"
  * response time = per-txn wall time (queue + cpu + io + lock-wait + commit); lock-wait ratio = sum(T_lock-wait) / sum(response).
  */
 export async function runRush(ctx: Ctx, opts: { bots?: number; mode?: Mode; seat?: string } = {}): Promise<RushResult> {
-  const n = Math.max(1, Math.min(opts.bots ?? 50, 150));
+  // RUSH_BOTS caps the bot count (hosted DBs have fewer connections); unset = 50 default, 150 max.
+  const cap = Number(process.env.RUSH_BOTS) || 0;
+  const n = Math.max(1, Math.min(opts.bots ?? (cap || 50), cap || 150));
   const mode: Mode = opts.mode ?? 'lock';
   const label = opts.seat ?? 'C7';
   const showtimeId = await demoShowtimeId(ctx);
