@@ -1,0 +1,40 @@
+/* Hall3D / Seat3D — CSS 3D model (matte clay) */
+.h3d{--h:720px;--s:1.45;position:relative;height:var(--h);perspective:2200px;perspective-origin:50% 30%;cursor:grab;user-select:none;-webkit-user-select:none;touch-action:pan-y}
+.h3d:active{cursor:grabbing}
+.h3d.static{cursor:default}
+.h3d-fit{position:absolute;left:50%;top:54%;width:0;height:0;transform-style:preserve-3d;transform:scale(var(--s))}
+.h3d-fit.shake{animation:h3dshake .5s cubic-bezier(.36,.07,.19,.97) both}
+@keyframes h3dshake{10%,90%{translate:-2px 0}20%,80%{translate:4px 0}30%,50%,70%{translate:-7px 0}40%,60%{translate:7px 0}}
+.h3d-scene,.h3d-sway,.h3d-g{position:absolute;left:0;top:0;width:0;height:0;transform-style:preserve-3d}
+.h3d-g{top:35px}
+.f3{position:absolute;left:0;top:0;transform-origin:0 0;box-sizing:border-box;border:1px solid transparent;border-radius:3px;transition:background-color .3s,border-color .3s}
+.seat3{position:absolute;width:0;height:0;transform-origin:0 0;transform-style:preserve-3d;outline:none;transition:transform 300ms cubic-bezier(.2,.8,.2,1),translate 300ms cubic-bezier(.2,.8,.2,1)}
+.seat3.int{cursor:pointer}
+.seat3.int:hover,.seat3.int:focus-visible{translate:0 0 4px}
+.seat3.int[data-s=yours]:hover{translate:0 0 2px}
+.h3d-sway{animation:h3dsway 14s ease-in-out infinite alternate}
+.h3d-unsway{position:absolute;left:0;top:0;width:0;height:0;transform-style:preserve-3d;animation:h3dunsway 14s ease-in-out infinite alternate}
+.h3d.paused .h3d-sway,.h3d.paused .h3d-unsway{animation-play-state:paused}
+.h3d.nosway .h3d-sway,.h3d.nosway .h3d-unsway{animation:none}
+@keyframes h3dsway{from{transform:rotateZ(-6deg)}to{transform:rotateZ(6deg)}}
+@keyframes h3dunsway{from{transform:rotateZ(6deg)}to{transform:rotateZ(-6deg)}}
+.h3d-bb{position:absolute;left:0;top:0;width:0;height:0;transform-style:preserve-3d;transform:rotateZ(calc(var(--ang) * -1)) rotateX(calc(var(--tilt) * -1))}
+.rise3{animation:h3drise .8s cubic-bezier(.2,.8,.2,1) var(--d,0ms) both}
+.rise3 .f3{animation:h3dfade .8s cubic-bezier(.2,.8,.2,1) var(--d,0ms) both}
+@keyframes h3drise{from{transform:translateZ(-20px)}to{transform:translateZ(0)}}
+@keyframes h3dfade{from{opacity:0}to{opacity:1}}
+@keyframes h3dpulse{0%,100%{opacity:.25}50%{opacity:1}}
+.h3d-ring.pulse{animation:h3dpulse 1.1s ease-in-out infinite}
+.h3d-hint{position:absolute;left:0;bottom:0;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);pointer-events:none}
+@media (max-width:1280px){.h3d{--s:1.1}}
+@media (max-width:1060px){.h3d{--s:1.3;--h:620px}}
+@media (max-width:860px){.h3d{--s:1.1}}
+@media (max-width:640px){.h3d{--s:.78;--h:460px}}
+@media (max-width:460px){.h3d{--s:.5;--h:380px}}
+@media (prefers-reduced-motion:reduce){
+  .h3d-sway,.h3d-unsway,.rise3,.rise3 .f3,.h3d-ring.pulse,.h3d-fit.shake{animation:none}
+  .seat3,.f3{transition:none}
+}
+
+@keyframes seat3sway{from{transform:rotateX(58deg) rotateZ(-24deg) scale(var(--sc))}to{transform:rotateX(58deg) rotateZ(-12deg) scale(var(--sc))}}
+@media (prefers-reduced-motion:reduce){[style*="seat3sway"]{animation:none !important}}

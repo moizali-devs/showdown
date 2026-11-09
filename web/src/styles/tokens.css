@@ -1,0 +1,6 @@
+:root{
+  --ground:#ECEAE5; --surface:#F6F5F2; --ink:#141414; --muted:#6B6862; --line:#D6D2CA;
+  --clay:#DAD6CE; --clay-side:#C5C0B6; --clay-shade:#B3ADA2;
+  --held:#E8A33D; --booked:#1F8A5B; --conflict:#E5484D; --cust-a:#2F6FEB; --cust-b:#F2730A;
+  --font:Geist,system-ui,sans-serif; --mono:'Geist Mono',ui-monospace,monospace;
+}
