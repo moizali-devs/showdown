@@ -12,7 +12,7 @@ import type { ModeKey } from '../components/ModeMini';
 import { api } from '../lib/api';
 import type { Movie, Showtime } from '../lib/api';
 import { useWidth, dayKey, dayLabel } from '../lib/hooks';
-import { posterFor, grayPosterFor } from '../lib/posters';
+import { posterFor, grayPosterFor, posterSrcSet, grayPosterSrcSet, POSTER_W, POSTER_H, SIZES_CARD, SIZES_HERO } from '../lib/posters';
 import { useXRay } from '../lib/xray';
 import { useReveal } from '../lib/useReveal';
 import '../styles/home.css';
@@ -51,8 +51,8 @@ function Poster({ movie, alt }: { movie: Movie; alt: string }) {
   if (!src) return <span className="hm-fallback"><FilmArt movie={movie} /></span>;
   return (
     <>
-      <img src={src} alt={alt} width={500} height={740} loading="lazy" decoding="async" />
-      <img className="gray" src={grayPosterFor(movie.title) ?? src} alt="" aria-hidden="true" width={500} height={740} loading="lazy" decoding="async" />
+      <img src={src} srcSet={posterSrcSet(movie.title) ?? undefined} sizes={SIZES_CARD} alt={alt} width={POSTER_W} height={POSTER_H} loading="lazy" decoding="async" />
+      <img className="gray" src={grayPosterFor(movie.title) ?? src} srcSet={grayPosterSrcSet(movie.title) ?? undefined} sizes={SIZES_CARD} alt="" aria-hidden="true" width={POSTER_W} height={POSTER_H} loading="lazy" decoding="async" />
     </>
   );
 }
@@ -141,7 +141,7 @@ export default function Home() {
                 <div className="hm-hero">
                   <Link className="hm-poster st" style={idx(0)} to={`/films/${featured.movie.id}`} aria-label={`${featured.movie.title}, details`}>
                     {posterFor(featured.movie.title)
-                      ? <img src={posterFor(featured.movie.title)!} alt={`${featured.movie.title} poster`} width={500} height={740} decoding="async" />
+                      ? <img src={posterFor(featured.movie.title)!} srcSet={posterSrcSet(featured.movie.title) ?? undefined} sizes={SIZES_HERO} alt={`${featured.movie.title} poster`} width={POSTER_W} height={POSTER_H} loading="eager" decoding="async" {...{ fetchpriority: "high" }} />
                       : <FilmArt movie={featured.movie} />}
                   </Link>
                   <div style={{ paddingBottom: 8, minWidth: 0 }}>

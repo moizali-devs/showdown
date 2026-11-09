@@ -30,7 +30,7 @@ export default function Films() {
           <div className="film-grid">
             {(movies ?? []).map(m => (
               <Link key={m.id} to={`/films/${m.id}`} className="film-card" aria-label={m.title}>
-                <div className="art"><FilmArt movie={m} /></div>
+                <div className="art"><FilmArt movie={m} sizes="(max-width: 520px) 90vw, 260px" /></div>
                 <div style={{ marginTop: 16, fontSize: 22, fontWeight: 300, letterSpacing: '-0.02em', lineHeight: 1.15 }}>{m.title}</div>
                 <div style={{ marginTop: 6, fontSize: 12, color: 'var(--muted)' }}>{m.genre} · {m.year}</div>
               </Link>

@@ -1,7 +1,7 @@
 import { memo, useState } from 'react';
 import type { ReactNode } from 'react';
 import type { Movie } from '@shared/types';
-import { posterFor, POSTER_W, POSTER_H } from '../lib/posters';
+import { posterFor, posterSrcSet, SIZES_CARD, POSTER_W, POSTER_H } from '../lib/posters';
 
 /** Original abstract art per film (pure SVG, no posters, no runtimes/cast). 300 x 400 viewBox. */
 const MOTIFS = ['dune', 'sail', 'ring', 'shield', 'web', 'planet', 'blocks', 'cape'] as const;
@@ -90,13 +90,13 @@ function art(m: Motif, p: string[]): ReactNode {
 
 const DEFAULT_PAL = ['#C5C0B6', '#9A948A', '#6F6A62', '#F6F5F2'];
 
-function FilmArt({ movie, ratio = '3 / 4', className }: { movie: Pick<Movie, 'title' | 'art'>; ratio?: string; className?: string }) {
+function FilmArt({ movie, ratio = '3 / 4', className, sizes = SIZES_CARD }: { movie: Pick<Movie, 'title' | 'art'>; ratio?: string; className?: string; sizes?: string }) {
   const poster = posterFor(movie.title);
   const [failed, setFailed] = useState(false);
   if (poster && !failed) {
     return (
       <div className={className} style={{ aspectRatio: '2 / 3', background: 'var(--line, #D9D6CF)', overflow: 'hidden', borderRadius: 3, position: 'relative', boxShadow: '0 0 0 1px rgba(20,20,20,.12)' }}>
-        <img src={poster} alt={`${movie.title} poster`} width={POSTER_W} height={POSTER_H} loading="lazy" decoding="async" onError={() => setFailed(true)} style={{ display: 'block', width: '100%', height: '100%', objectFit: 'cover' }} />
+        <img src={poster} srcSet={posterSrcSet(movie.title) ?? undefined} sizes={sizes} alt={`${movie.title} poster`} width={POSTER_W} height={POSTER_H} loading="lazy" decoding="async" onError={() => setFailed(true)} style={{ display: 'block', width: '100%', height: '100%', objectFit: 'cover' }} />
       </div>
     );
   }

@@ -31,7 +31,7 @@ export default function Movie() {
         {err && <div role="alert" style={{ marginTop: 40, color: 'var(--muted)' }}>Could not load this film. {err}</div>}
         {data && (
           <div className="movie-grid" style={{ marginTop: 40 }}>
-            <FilmArt movie={data.movie} />
+            <FilmArt movie={data.movie} sizes="(max-width: 760px) 90vw, 340px" />
             <div>
               <Label>{data.movie.genre} · {data.movie.year}</Label>
               <h1 style={{ margin: '16px 0 0', fontWeight: 300, fontSize: 'clamp(40px,6vw,88px)', lineHeight: 0.95, letterSpacing: '-0.04em' }}>{data.movie.title}</h1>
