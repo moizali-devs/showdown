@@ -15,12 +15,16 @@
 .h3d-sway{animation:h3dsway 14s ease-in-out infinite alternate}
 .h3d-unsway{position:absolute;left:0;top:0;width:0;height:0;transform-style:preserve-3d;animation:h3dunsway 14s ease-in-out infinite alternate}
 .h3d.paused .h3d-sway,.h3d.paused .h3d-unsway{animation-play-state:paused}
+/* perf: hold the sway while the page scrolls / the model is off-screen (attrs set by Hall3D) */
+.h3d[data-scrolling] .h3d-sway,.h3d[data-scrolling] .h3d-unsway,.h3d[data-offscreen] .h3d-sway,.h3d[data-offscreen] .h3d-unsway{animation-play-state:paused}
+@media screen{.h3d[data-offscreen] .h3d-fit{visibility:hidden}}
+.h3d.int[data-scrolling] .h3d-fit{pointer-events:none}
 .h3d.nosway .h3d-sway,.h3d.nosway .h3d-unsway{animation:none}
 @keyframes h3dsway{from{transform:rotateZ(-6deg)}to{transform:rotateZ(6deg)}}
 @keyframes h3dunsway{from{transform:rotateZ(6deg)}to{transform:rotateZ(-6deg)}}
 .h3d-bb{position:absolute;left:0;top:0;width:0;height:0;transform-style:preserve-3d;transform:rotateZ(calc(var(--ang) * -1)) rotateX(calc(var(--tilt) * -1))}
-.rise3{animation:h3drise .8s cubic-bezier(.2,.8,.2,1) var(--d,0ms) both}
-.rise3 .f3{animation:h3dfade .8s cubic-bezier(.2,.8,.2,1) var(--d,0ms) both}
+.rise3{animation:h3drise .8s cubic-bezier(.2,.8,.2,1) var(--d,0ms) backwards}
+.rise3 .f3{animation:h3dfade .8s cubic-bezier(.2,.8,.2,1) var(--d,0ms) backwards}
 @keyframes h3drise{from{transform:translateZ(-20px)}to{transform:translateZ(0)}}
 @keyframes h3dfade{from{opacity:0}to{opacity:1}}
 @keyframes h3dpulse{0%,100%{opacity:.25}50%{opacity:1}}

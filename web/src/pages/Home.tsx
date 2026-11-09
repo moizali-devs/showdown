@@ -51,7 +51,7 @@ export default function Home() {
   // Hall3D owns the orbit; here we only notice that the user moved it, to offer "Reset".
   const down = useRef({ x: 0, y: 0, on: false });
   const pd = (e: RPE) => { down.current = { x: e.clientX, y: e.clientY, on: true }; };
-  const pm = (e: RPE) => { const d = down.current; if (d.on && Math.hypot(e.clientX - d.x, e.clientY - d.y) > 5) setDragged(true); };
+  const pm = (e: RPE) => { const d = down.current; if (d.on && !dragged && Math.hypot(e.clientX - d.x, e.clientY - d.y) > 5) setDragged(true); };
   const pu = () => { down.current.on = false; };
 
   return (

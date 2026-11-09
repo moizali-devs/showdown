@@ -1,4 +1,4 @@
-import { memo, useCallback, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import { memo, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import type { CSSProperties, KeyboardEvent, PointerEvent as RPointerEvent } from 'react';
 import '../styles/hall3d.css';
 
@@ -61,6 +61,16 @@ const SLAB = {
 };
 const PLINTH = {
   top: { background: '#F6F5F2' } as CSSProperties, front: { background: '#DDD9D0' } as CSSProperties, side: { background: '#CFCAC0' } as CSSProperties,
+};
+
+/* Contact shadow: a 680x540 black ellipse at 18% under blur(30px), pre-blurred into a radial
+   gradient (erf falloff, sigma 30px). A live filter inside the swaying 3D scene is re-applied by the
+   compositor every frame (WebKit especially); a gradient is rasterised once. */
+const CONTACT_SHADOW: CSSProperties = {
+  position: 'absolute', left: -445, top: -385, width: 890, height: 710, transform: 'translateZ(-16px)', pointerEvents: 'none',
+  background: 'radial-gradient(340px 270px at 50% 50%,rgba(0,0,0,.18) 70%,rgba(0,0,0,.179) 75.2%,rgba(0,0,0,.176) 80.2%,'
+    + 'rgba(0,0,0,.168) 85.1%,rgba(0,0,0,.1514) 90.1%,rgba(0,0,0,.1245) 95%,rgba(0,0,0,.09) 100%,rgba(0,0,0,.0555) 105%,'
+    + 'rgba(0,0,0,.0286) 109.9%,rgba(0,0,0,.012) 114.9%,rgba(0,0,0,.0041) 119.8%,rgba(0,0,0,.0011) 124.8%,rgba(0,0,0,0) 129.7%)',
 };
 
 /* ---------- layout ---------- */
@@ -229,6 +239,7 @@ export default function Hall3D(props: Hall3DProps) {
     interactive = false, height, scale, sway = true, shake = false, showOrbitHint = true, ariaLabel,
   } = props;
 
+  const stageRef = useRef<HTMLDivElement>(null);
   const sceneRef = useRef<HTMLDivElement>(null);
   const cur = useRef({ angle: -18, tilt: 54 });
   const drag = useRef<{ x: number; y: number; a: number; t: number } | null>(null);
@@ -245,6 +256,27 @@ export default function Hall3D(props: Hall3DProps) {
     s.style.setProperty('--tilt', tilt + 'deg');
   }, []);
   useLayoutEffect(apply, [apply]);
+
+  // Scroll smoothness: the idle sway re-composites every face of the model each frame, so hold it
+  // while the page is scrolling and while the model is off-screen (then also skip drawing it).
+  // Data-attribute toggles (React never touches them) from passive listeners: no renders, no layout reads.
+  useEffect(() => {
+    const el = stageRef.current;
+    if (!el) return;
+    let timer = 0;
+    const settle = () => { timer = 0; el.removeAttribute('data-scrolling'); };
+    const onScroll = () => {
+      if (!timer) el.setAttribute('data-scrolling', ''); else clearTimeout(timer);
+      timer = window.setTimeout(settle, 160);
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    let io: IntersectionObserver | null = null;
+    if (typeof IntersectionObserver !== 'undefined') {
+      io = new IntersectionObserver(es => { for (const e of es) el.toggleAttribute('data-offscreen', !e.isIntersecting); }, { rootMargin: '120px 0px' });
+      io.observe(el);
+    }
+    return () => { window.removeEventListener('scroll', onScroll); io?.disconnect(); if (timer) clearTimeout(timer); };
+  }, []);
 
   const cb = useRef({ onSeatClick, onSeatHover });
   cb.current = { onSeatClick, onSeatHover };
@@ -292,7 +324,8 @@ export default function Hall3D(props: Hall3DProps) {
 
   return (
     <div
-      className={'h3d' + (stopped ? ' paused' : '') + (sway ? '' : ' nosway')}
+      ref={stageRef}
+      className={'h3d' + (stopped ? ' paused' : '') + (sway ? '' : ' nosway') + (interactive ? ' int' : '')}
       style={stageStyle}
       role={interactive ? 'group' : 'img'}
       aria-label={ariaLabel ?? 'Cinema hall, rows A to J, 14 seats per row'}
@@ -302,10 +335,7 @@ export default function Hall3D(props: Hall3DProps) {
         <div ref={sceneRef} className="h3d-scene">
           <div className="h3d-sway">
             <div className="h3d-g">
-              <div style={{
-                position: 'absolute', left: -340, top: -300, width: 680, height: 540, borderRadius: '50%',
-                background: '#000', opacity: 0.18, filter: 'blur(30px)', transform: 'translateZ(-16px)',
-              }} />
+              <div style={CONTACT_SHADOW} />
               <Plinth xray={xray} />
               {rows}
               <Screen xray={xray} />

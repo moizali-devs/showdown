@@ -8,3 +8,4 @@ verification/
 .vercel
 .env*.local
 api/_app.mjs
+__pycache__/
