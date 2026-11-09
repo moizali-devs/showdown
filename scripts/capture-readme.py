@@ -45,15 +45,32 @@ def wait_result(page, timeout=20000):
 
 with sync_playwright() as pw:
     br = pw.chromium.launch(args=["--use-gl=swiftshader", "--enable-webgl", "--ignore-gpu-blocklist"])
-    def ctx(w, h, **kw):
-        return br.new_context(viewport={"width": w, "height": h}, device_scale_factor=2, **kw)
+    def ctx(w, h, xray=False, **kw):
+        c = br.new_context(viewport={"width": w, "height": h}, device_scale_factor=2, **kw)
+        # every capture starts with an explicit X-Ray state ('1' on, '0' off)
+        c.add_init_script(f"try{{localStorage.setItem('showdown.xray','{'1' if xray else '0'}')}}catch(e){{}}")
+        return c
 
-    # 1,2 home
+    # 1 home (cinema, X-Ray off)
     c = ctx(1440, 900); p = c.new_page()
     goto(p, BASE + "/", 4000)
     save(p, "hero.png")
-    p.locator("button.xray-btn").click(); p.wait_for_timeout(2500)
+    # toggle through the nav switch to prove it works, then capture the X-Ray home
+    p.locator('[data-testid=xray-switch]').click(); p.wait_for_timeout(2500)
+    p.mouse.move(5, 5); p.wait_for_timeout(500)
+    save(p, "xray-home.png")
+    c.close()
+
+    # 2 xray: Showdown in Lock mode with X-Ray on, mid-race
+    c = ctx(1440, 1000, xray=True); p = c.new_page()
+    goto(p, SD, 3500)
+    sd_reset(p)
+    sd_mode(p, "Lock"); sd_run(p)
+    p.wait_for_function("document.body.innerText.toLowerCase().includes('waiting')", timeout=20000, polling=30)
+    p.wait_for_timeout(1200)
     save(p, "xray.png")
+    wait_result(p)
+    sd_reset(p)
     c.close()
 
     # 3,4 showdown
@@ -72,7 +89,7 @@ with sync_playwright() as pw:
     c.close()
 
     # 5 hall
-    c = ctx(1440, 1000); p = c.new_page()
+    c = ctx(1440, 1000); p = c.new_page()  # X-Ray off
     goto(p, f"{BASE}/hall/{SHOW}", 3500)
     for s in ["F6", "F7", "F8"]:
         e = p.get_by_role("button", name=re.compile(rf"^Seat {s},")); e.focus(); p.keyboard.press("Enter"); p.wait_for_timeout(500)
@@ -124,6 +141,7 @@ with sync_playwright() as pw:
     # 11 gif
     vd = Path(tempfile.mkdtemp())
     c = br.new_context(viewport={"width": 1200, "height": 800}, record_video_dir=str(vd), record_video_size={"width": 1200, "height": 800})
+    c.add_init_script("try{localStorage.setItem('showdown.xray','0')}catch(e){}")
     p = c.new_page(); goto(p, SD, 2000)
     sd_reset(p)
     sd_mode(p, "Lock"); p.wait_for_timeout(700); sd_run(p); wait_result(p)
@@ -133,8 +151,8 @@ with sync_playwright() as pw:
     c.close(); br.close()
     webm = next(vd.glob("*.webm"))
     pal = vd / "pal.png"
-    vf = "fps=12,scale=1200:-1:flags=lanczos"
-    subprocess.run(["ffmpeg", "-y", "-i", str(webm), "-vf", vf + ",palettegen=max_colors=128", str(pal)], check=True, capture_output=True)
-    subprocess.run(["ffmpeg", "-y", "-i", str(webm), "-i", str(pal), "-lavfi", vf + "[x];[x][1:v]paletteuse=dither=bayer:bayer_scale=4", str(OUT / "race.gif")], check=True, capture_output=True)
+    vf = "fps=10,scale=1000:-1:flags=lanczos"
+    subprocess.run(["ffmpeg", "-y", "-i", str(webm), "-vf", vf + ",palettegen=max_colors=96", str(pal)], check=True, capture_output=True)
+    subprocess.run(["ffmpeg", "-y", "-i", str(webm), "-i", str(pal), "-lavfi", vf + "[x];[x][1:v]paletteuse=dither=bayer:bayer_scale=5", str(OUT / "race.gif")], check=True, capture_output=True)
     shutil.rmtree(vd, ignore_errors=True)
 print("done")

@@ -18,7 +18,7 @@ deadlock, or (with protection off) double-book it, live.
 
 **[Live demo → showdown-iota.vercel.app](https://showdown-iota.vercel.app)**
 
-![Showdown home page: a matte 3D cinema hall with two customers reaching for seat C7](docs/media/hero.png)
+![Showdown home page: a real cinema with a featured film, showtimes and a Book seats button; flip X-Ray to see the database](docs/media/hero.png)
 
 </div>
 
@@ -27,8 +27,8 @@ deadlock, or (with protection off) double-book it, live.
 ## The idea
 
 Every database course teaches the *lost update*, *two-phase locking* and *deadlocks* on a whiteboard.
-Showdown puts them on a screen. It is a real booking site (films, showtimes, a 3D seat map, hold and pay),
-but every customer window holds **its own dedicated PostgreSQL connection**, so the locks, the waiting and
+Showdown puts them on a screen. It is a real cinema booking site (films, showtimes, a 3D seat map, hold and pay), and one
+**X-Ray** switch in the nav flips it into the database view. Every customer window holds **its own dedicated PostgreSQL connection**, so the locks, the waiting and
 the deadlocks are not animations: they happen inside PostgreSQL, and the **X-Ray** view shows you the SQL,
 `pg_locks` and the result as they happen.
 
@@ -58,10 +58,14 @@ Flip the protection switch and run the same race again. Same seat, same two clic
 
 ## X-Ray
 
-One switch turns the hall into a wireframe. Only the seat in the transaction stays solid, and the SQL each
+The X-Ray switch in the nav is the only door to the database layer; it is off by default, so visitors see a plain cinema. Switched on, Home becomes the behind-the-scenes view (a wireframe hall, with links to Showdown and the Lab), and the Hall and Showdown turn into wireframes too. Only the seat in the transaction stays solid, and the SQL each
 session sent, the lock it holds or waits on, and the timings appear next to it.
 
-![X-Ray mode: wireframe hall with the locked seat solid and the SQL beside it](docs/media/xray.png)
+![Home with X-Ray on: Two people, One seat over a wireframe hall](docs/media/xray-home.png)
+
+<sub>Home with X-Ray on. The same page with it off is the cinema at the top of this README.</sub>
+
+![X-Ray on in Showdown: wireframe hall with the locked seat solid and the SQL beside it](docs/media/xray.png)
 
 ## The Lab
 
